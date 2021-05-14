@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace TextAnim
 {
     internal class Program
     {
+        private static Random rng = new Random();
+
         private static void Main(string[] args)
         {
+            MyConsole.WriteLine("Hallå ja");
+            MyConsole.SetCursorPosition(2, 4);
+            MyConsole.WriteLine("Jodå");
             int color = 4;
             Console.ForegroundColor = (ConsoleColor)color;
+            StringWriter writer = new StringWriter();
+            //writer = Console.Out;
+            Console.SetOut(writer);
             string input = Console.ReadLine();
             for (int i = 0; i < 20; i++)
             {
@@ -42,7 +51,7 @@ namespace TextAnim
             char[] characters = input.ToCharArray();
             int maxPos = (int)Math.Round(3.75 * characters.Length - 1, MidpointRounding.ToZero);
             int[] pos = new int[characters.Length];
-            string temp = string.Empty;
+            //string temp = string.Empty;
             /*for (int i = 0; i < characters.Length; i++)
             {
                 //pos[characters.Length - i - 1] = i;
@@ -114,10 +123,6 @@ namespace TextAnim
                 Console.WriteLine();
                 //Console.WriteLine(send);
             }
-            //color++;
-            //Console.ForegroundColor = (ConsoleColor)color;
-            //Console.SetCursorPosition(maxPos - characters.Length, Console.CursorTop);
-            //Console.Write(input);
 
             color++;
             Console.ForegroundColor = (ConsoleColor)color;
@@ -163,8 +168,338 @@ namespace TextAnim
                 Console.WriteLine();
                 //Console.WriteLine(send);
             }
-
+            color++;
+            Console.ForegroundColor = (ConsoleColor)color;
+            curPos = 0;
+            for (int i = 0; i < 15; i++)
+            {
+                //input = " " + input;
+                curPos++;
+                Console.SetCursorPosition(curPos, Console.CursorTop);
+                Console.WriteLine(input);
+            }
+            string[] splitted = SplitTheString(input, 3);
+            int[] positions = new int[3];
+            for (int i = 0; i < positions.Length; i++)
+            {
+                //positions[i] = curPos + (i == 0 ? 0 : splitted[i].Length - 1);
+                positions[i] = curPos;
+                //if (i > 0)
+                //{
+                //    positions[i] += splitted[i - 1].Length;
+                //}
+                for (int a = 0; a < i; a++)
+                {
+                    positions[i] += splitted[a].Length;
+                }
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                for (int a = 0; a < splitted.Length; a++)
+                {
+                    if (a == 0)
+                    {
+                        positions[a]--;
+                    }
+                    else if (a == 2)
+                    {
+                        positions[a]++;
+                    }
+                    Console.SetCursorPosition(positions[a], Console.CursorTop);
+                    Console.Write(splitted[a]);
+                }
+                Console.WriteLine();
+            }
+            bool movingLeft = false;
+            int original = positions[1];
+            for (int i = 0; i < 30; i++)
+            {
+                if (positions[1] > positions[2] - splitted[1].Length - 4)
+                {
+                    movingLeft = true;
+                }
+                else if (positions[1] < positions[0] + splitted[0].Length + 4)
+                {
+                    movingLeft = false;
+                }
+                positions[1] += movingLeft ? -1 : 1;
+                for (int a = 0; a < splitted.Length; a++)
+                {
+                    Console.SetCursorPosition(positions[a], Console.CursorTop);
+                    Console.Write(splitted[a]);
+                }
+                Console.WriteLine();
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                for (int a = 0; a < splitted.Length; a++)
+                {
+                    if (a == 0)
+                    {
+                        positions[a]++;
+                    }
+                    else if (a == 2)
+                    {
+                        positions[a]--;
+                    }
+                    else if (a == 1 && positions[a] != original)
+                    {
+                        if (original < positions[a])
+                        {
+                            positions[a]--;
+                        }
+                        else
+                        {
+                            positions[a]++;
+                        }
+                    }
+                    Console.SetCursorPosition(positions[a], Console.CursorTop);
+                    Console.Write(splitted[a]);
+                }
+                Console.WriteLine();
+            }
+            Console.SetCursorPosition(curPos, Console.CursorTop);
+            Console.WriteLine(input);
+            for (int i = 0; i < 15; i++)
+            {
+                //input = " " + input;
+                curPos--;
+                Console.SetCursorPosition(curPos, Console.CursorTop);
+                Console.WriteLine(input);
+            }
+            string offsetted = input;
+            int timesToRun = GetNearestMultiple(20, input.Length);
+            int offset = 1 * (rng.Next(0, 2) == 0 ? 1 : -1);
+            for (int i = 0; i < timesToRun; i++)
+            {
+                offsetted = Offset(offsetted, offset);
+                Console.WriteLine(offsetted);
+            }
+            color++;
+            Console.ForegroundColor = (ConsoleColor)color;
+            for (int i = 0; i < 15; i++)
+            {
+                //input = " " + input;
+                curPos++;
+                Console.SetCursorPosition(curPos, Console.CursorTop);
+                Console.WriteLine(input);
+            }
+            splitted = SplitTheString(input, 2);
+            positions = new int[2];
+            for (int i = 0; i < positions.Length; i++)
+            {
+                //positions[i] = curPos + (i == 0 ? 0 : splitted[i].Length - 1);
+                positions[i] = curPos;
+                //if (i > 0)
+                //{
+                //    positions[i] += splitted[i - 1].Length;
+                //}
+                for (int a = 0; a < i; a++)
+                {
+                    positions[i] += splitted[a].Length;
+                }
+            }
+            movingLeft = true;
+            int[] originalPos = new int[positions.Length];
+            for (int i = 0; i < originalPos.Length; i++)
+            {
+                originalPos[i] = positions[i];
+            }
+            for (int i = 0; i < 50; i++)
+            {
+                if (positions[0] < 1)
+                {
+                    movingLeft = false;
+                }
+                else if (positions[1] < 1)
+                {
+                    movingLeft = true;
+                }
+                for (int a = 0; a < splitted.Length; a++)
+                {
+                    if (a == 0)
+                    {
+                        positions[a] += movingLeft ? -1 : 1;
+                    }
+                    else if (a == 1)
+                    {
+                        positions[a] += movingLeft ? 1 : -1;
+                    }
+                    Console.SetCursorPosition(positions[a], Console.CursorTop);
+                    Console.Write(splitted[a]);
+                }
+                Console.WriteLine();
+            }
+            for (int i = 0; i < 30; i++)
+            {
+                for (int a = 0; a < splitted.Length; a++)
+                {
+                    if (positions[a] != originalPos[a])
+                    {
+                        positions[a] += positions[a] < originalPos[a] ? 1 : -1;
+                    }
+                    Console.SetCursorPosition(positions[a], Console.CursorTop);
+                    Console.Write(splitted[a]);
+                }
+                Console.WriteLine();
+            }
+            color++;
+            Console.ForegroundColor = (ConsoleColor)color;
+            for (int i = 0; i < 15; i++)
+            {
+                //input = " " + input;
+                curPos--;
+                Console.SetCursorPosition(curPos, Console.CursorTop);
+                Console.WriteLine(input);
+            }
+            for (int i = 0; i < 15; i++)
+            {
+                Console.WriteLine();
+            }
+            string temp = writer.ToString();
             Console.ReadKey(true);
+        }
+
+        private static string Offset(string str, int offset)
+        {
+            if (offset > 0)
+            {
+                string end = str.Substring(str.Length - offset);
+                str = str.Remove(str.Length - offset);
+                str = str.Insert(0, end);
+            }
+            else
+            {
+                offset *= -1;
+                string start = str.Substring(0, offset);
+                str = str.Remove(0, offset);
+                str = str.Insert(str.Length, start);
+            }
+            return str;
+        }
+
+        private static string[] SplitTheString(string input, int parts)
+        {
+            string[] split = input.Split();
+            if (split.Length != parts)
+            {
+                split = ChunksUpto(input, input.Length / parts).ToArray();
+                if (split.Length > parts)
+                {
+                    string[] temp = new string[parts];
+                    for (int i = 0; i < temp.Length; i++)
+                    {
+                        temp[i] = split[i];
+                    }
+                    for (int i = parts; i < split.Length; i++)
+                    {
+                        temp[temp.Length - 1] += split[i];
+                    }
+                    split = temp;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < split.Length; i++)
+                {
+                    split[i] = split[i].Insert(0, " ");
+                }
+            }
+            return split;
+        }
+
+        //private static IEnumerable<string> Split(string str, int chunkSize)
+        //{
+        //    return Enumerable.Range(0, str.Length / chunkSize)
+        //        .Select(i => str.Substring(i * chunkSize, chunkSize));
+        //}
+
+        private static IEnumerable<string> ChunksUpto(string str, int maxChunkSize)
+        {
+            for (int i = 0; i < str.Length; i += maxChunkSize)
+                yield return str.Substring(i, Math.Min(maxChunkSize, str.Length - i));
+        }
+
+        private static int GetNearestMultiple(int value, int factor) // use get nearest to
+        {
+            return (int)Math.Round(
+                              (value / (double)factor),
+                              MidpointRounding.AwayFromZero
+                          ) * factor;
+        }
+
+        private static class MyConsole
+        {
+            private static List<string> everyThing = new List<string>();
+            private static int[] position = new int[2];
+
+            public static void WriteLine(string str)
+            {
+                UpdateCursor();
+                if (everyThing[position[1]].Length < str.Length + position[0])
+                {
+                    everyThing[position[1]] = everyThing[position[1]].PadRight(position[0] + str.Length);
+                }
+                foreach (char c in str)
+                {
+                    everyThing[position[1]] = ReplaceAt(everyThing[position[1]], position[0], c);
+                    position[0]++;
+                }
+                position[1]++;
+                position[0] = 0;
+                UpdateCursor();
+            }
+
+            private static void UpdateCursor()
+            {
+                if (everyThing.Count < 1)
+                {
+                    everyThing.Add(new string(""));
+                }
+
+                if (position[1] > everyThing.Count - 1)
+                {
+                    int temp = everyThing.Count - 1;
+                    for (int i = temp; i < position[1]; i++)
+                    {
+                        everyThing.Add(new string(""));
+                    }
+                }
+                if (position[0] > 0 && everyThing[position[1]].Length - 1 < position[0])
+                {
+                    everyThing[position[1]] = everyThing[position[1]].PadRight(position[0]);
+                }
+            }
+
+            public static void Write(string str)
+            {
+                if (everyThing.Count < 1)
+                {
+                    everyThing.Add(new string(""));
+                }
+                foreach (char c in str)
+                {
+                    ReplaceAt(everyThing[position[1]], position[0], c);
+                    position[0]++;
+                }
+            }
+
+            public static void SetCursorPosition(int x, int y)
+            {
+                position[0] = x;
+                position[1] = y;
+            }
+
+            private static string ReplaceAt(string input, int index, char newChar)
+            {
+                if (input == null)
+                {
+                    throw new ArgumentNullException("input");
+                }
+                char[] chars = input.ToCharArray();
+                chars[index] = newChar;
+                return new string(chars);
+            }
         }
     }
 }
