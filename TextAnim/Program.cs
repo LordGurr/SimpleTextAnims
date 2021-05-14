@@ -11,15 +11,16 @@ namespace TextAnim
 
         private static void Main(string[] args)
         {
-            MyConsole.WriteLine("Hallå ja");
-            MyConsole.SetCursorPosition(2, 4);
-            MyConsole.WriteLine("Jodå");
+            //MyConsole.WriteLine("Hallå ja");
+            //MyConsole.SetCursorPosition(2, 4);
+            //MyConsole.WriteLine("Jodå");
             int color = 4;
             //MyConsole.ForegroundColor = (MyConsoleColor)color;
             StringWriter writer = new StringWriter();
             //writer = MyConsole.Out;
             //MyConsole.SetOut(writer);
             string input = Console.ReadLine();
+            Console.WriteLine(TextAnimation(input));
             for (int i = 0; i < 20; i++)
             {
                 MyConsole.WriteLine(input);
@@ -106,13 +107,7 @@ namespace TextAnim
                     //int spaces = a+ (startedMoving[a]? i: 0);
                     //int spaces = characters.Length - a - 1 + (i * a);
                     int spaces = pos[a] - characters.Length + i - characters.Length * 2;
-                    if (spaces < a)
-                    {
-                    }
                     spaces = spaces < a ? a : spaces;
-                    if (spaces >= maxPos)
-                    {
-                    }
                     //spaces = spaces >= maxPos ? a + maxPos - 3 : spaces;
 
                     spaces = spaces + characters.Length - a - 1 >= maxPos ? maxPos - (characters.Length - a) : spaces;
@@ -370,6 +365,242 @@ namespace TextAnim
             string temp = writer.ToString();
             Console.WriteLine(MyConsole.GetString());
             Console.ReadKey(true);
+        }
+
+        private static string TextAnimation(string input)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                MyConsole.WriteLine(input);
+            }
+            int curPos = 0;
+            for (int a = 0; a < 2; a++)
+            {
+                //Move to the Right
+                Move(ref curPos, 20, input, false);
+
+                //Move to the left
+                Move(ref curPos, 20, input, true);
+            }
+            char[] characters = input.ToCharArray();
+            int maxPos = (int)Math.Round(3.75 * characters.Length - 1, MidpointRounding.ToZero);
+            int[] pos = new int[characters.Length];
+            for (int i = 0; i < pos.Length; i++)
+            {
+                pos[i] = i * 3;
+            }
+            // Cha cha to the right
+            for (int i = 0; i < 7.5 * characters.Length; i++)
+            {
+                for (int a = 0; a < characters.Length; a++)
+                {
+                    int spaces = pos[a] - characters.Length + i - characters.Length * 2;
+                    spaces = spaces < a ? a : spaces;
+                    spaces = spaces + characters.Length - a - 1 >= maxPos ? maxPos - (characters.Length - a) : spaces;
+                    MyConsole.SetCursorPosition(spaces, MyConsole.CursorTop);
+                    MyConsole.Write(characters[a]);
+                }
+                MyConsole.WriteLine();
+            }
+            // Cha cha to the left
+            for (int i = (int)Math.Round(7.5 * characters.Length - 1, MidpointRounding.ToZero); i > -1; i--)
+            {
+                for (int a = 0; a < characters.Length; a++)
+                {
+                    int spaces = pos[a] - characters.Length + i - characters.Length * 2;
+                    if (spaces < a)
+                    {
+                    }
+                    spaces = spaces < a ? a : spaces;
+                    if (spaces >= maxPos)
+                    {
+                    }
+                    spaces = spaces + characters.Length - a - 1 >= maxPos ? maxPos - (characters.Length - a) : spaces;
+                    MyConsole.SetCursorPosition(spaces, MyConsole.CursorTop);
+                    MyConsole.Write(characters[a]);
+                }
+                MyConsole.WriteLine();
+            }
+            // Move to the right
+            curPos = 0;
+            Move(ref curPos, 15, input, false);
+
+            // Wiggle in the middle
+            string[] splitted = SplitTheString(input, 3);
+            int[] positions = new int[3];
+            for (int i = 0; i < positions.Length; i++)
+            {
+                positions[i] = curPos;
+                for (int a = 0; a < i; a++)
+                {
+                    positions[i] += splitted[a].Length;
+                }
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                for (int a = 0; a < splitted.Length; a++)
+                {
+                    if (a == 0)
+                    {
+                        positions[a]--;
+                    }
+                    else if (a == 2)
+                    {
+                        positions[a]++;
+                    }
+                    MyConsole.SetCursorPosition(positions[a], MyConsole.CursorTop);
+                    MyConsole.Write(splitted[a]);
+                }
+                MyConsole.WriteLine();
+            }
+            bool movingLeft = false;
+            int original = positions[1];
+            for (int i = 0; i < 30; i++)
+            {
+                if (positions[1] > positions[2] - splitted[1].Length - 4)
+                {
+                    movingLeft = true;
+                }
+                else if (positions[1] < positions[0] + splitted[0].Length + 4)
+                {
+                    movingLeft = false;
+                }
+                positions[1] += movingLeft ? -1 : 1;
+                for (int a = 0; a < splitted.Length; a++)
+                {
+                    MyConsole.SetCursorPosition(positions[a], MyConsole.CursorTop);
+                    MyConsole.Write(splitted[a]);
+                }
+                MyConsole.WriteLine();
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                for (int a = 0; a < splitted.Length; a++)
+                {
+                    if (a == 0)
+                    {
+                        positions[a]++;
+                    }
+                    else if (a == 2)
+                    {
+                        positions[a]--;
+                    }
+                    else if (a == 1 && positions[a] != original)
+                    {
+                        if (original < positions[a])
+                        {
+                            positions[a]--;
+                        }
+                        else
+                        {
+                            positions[a]++;
+                        }
+                    }
+                    MyConsole.SetCursorPosition(positions[a], MyConsole.CursorTop);
+                    MyConsole.Write(splitted[a]);
+                }
+                MyConsole.WriteLine();
+            }
+            // Move to the left
+            MyConsole.SetCursorPosition(curPos, MyConsole.CursorTop);
+            MyConsole.WriteLine(input);
+            Move(ref curPos, 15, input, true);
+
+            // Offsets!
+            string offsetted = input;
+            int timesToRun = GetNearestMultiple(20, input.Length);
+            int offset = 1 * (rng.Next(0, 2) == 0 ? 1 : -1);
+            for (int i = 0; i < timesToRun; i++)
+            {
+                offsetted = Offset(offsetted, offset);
+                MyConsole.WriteLine(offsetted);
+            }
+            // Move to the right
+            Move(ref curPos, 15, input, false);
+            // Twist around
+            splitted = SplitTheString(input, 2);
+            positions = new int[2];
+            for (int i = 0; i < positions.Length; i++)
+            {
+                positions[i] = curPos;
+                for (int a = 0; a < i; a++)
+                {
+                    positions[i] += splitted[a].Length;
+                }
+            }
+            movingLeft = true;
+            int[] originalPos = new int[positions.Length];
+            for (int i = 0; i < originalPos.Length; i++)
+            {
+                originalPos[i] = positions[i];
+            }
+            for (int i = 0; i < 50; i++)
+            {
+                if (positions[0] < 1)
+                {
+                    movingLeft = false;
+                }
+                else if (positions[1] < 1)
+                {
+                    movingLeft = true;
+                }
+                for (int a = 0; a < splitted.Length; a++)
+                {
+                    if (a == 0)
+                    {
+                        positions[a] += movingLeft ? -1 : 1;
+                    }
+                    else if (a == 1)
+                    {
+                        positions[a] += movingLeft ? 1 : -1;
+                    }
+                    MyConsole.SetCursorPosition(positions[a], MyConsole.CursorTop);
+                    MyConsole.Write(splitted[a]);
+                }
+                MyConsole.WriteLine();
+            }
+            for (int i = 0; i < 30; i++)
+            {
+                for (int a = 0; a < splitted.Length; a++)
+                {
+                    if (positions[a] != originalPos[a])
+                    {
+                        positions[a] += positions[a] < originalPos[a] ? 1 : -1;
+                    }
+                    MyConsole.SetCursorPosition(positions[a], MyConsole.CursorTop);
+                    MyConsole.Write(splitted[a]);
+                }
+                MyConsole.WriteLine();
+            }
+            // Move to the left
+            Move(ref curPos, 15, input, true);
+            for (int i = 0; i < 15; i++)
+            {
+                MyConsole.WriteLine(input);
+            }
+            return MyConsole.GetString();
+        }
+
+        private static void Move(ref int curPos, int steps, string input, bool left)
+        {
+            if (left)
+            {
+                for (int i = 0; i < steps; i++)
+                {
+                    curPos--;
+                    MyConsole.SetCursorPosition(curPos, MyConsole.CursorTop);
+                    MyConsole.WriteLine(input);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < steps; i++)
+                {
+                    curPos++;
+                    MyConsole.SetCursorPosition(curPos, MyConsole.CursorTop);
+                    MyConsole.WriteLine(input);
+                }
+            }
         }
 
         private static string Offset(string str, int offset)
