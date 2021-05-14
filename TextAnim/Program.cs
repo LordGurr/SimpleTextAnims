@@ -15,38 +15,40 @@ namespace TextAnim
             MyConsole.SetCursorPosition(2, 4);
             MyConsole.WriteLine("Jodå");
             int color = 4;
-            Console.ForegroundColor = (ConsoleColor)color;
+            //MyConsole.ForegroundColor = (MyConsoleColor)color;
             StringWriter writer = new StringWriter();
-            //writer = Console.Out;
-            Console.SetOut(writer);
+            //writer = MyConsole.Out;
+            //MyConsole.SetOut(writer);
             string input = Console.ReadLine();
             for (int i = 0; i < 20; i++)
             {
-                Console.WriteLine(input);
+                MyConsole.WriteLine(input);
             }
             color++;
-            Console.ForegroundColor = (ConsoleColor)color;
+            //MyConsole.ForegroundColor = (MyConsoleColor)color;
             int curPos = 0;
             for (int a = 0; a < 2; a++)
             {
+                //Move to the Right
                 for (int i = 0; i < 20; i++)
                 {
                     //input = " " + input;
                     curPos++;
-                    Console.SetCursorPosition(curPos, Console.CursorTop);
-                    Console.WriteLine(input);
+                    MyConsole.SetCursorPosition(curPos, MyConsole.CursorTop);
+                    MyConsole.WriteLine(input);
                 }
                 color++;
-                Console.ForegroundColor = (ConsoleColor)color;
+                //MyConsole.ForegroundColor = (MyConsoleColor)color;
+                //Move to the left
                 for (int i = 0; i < 20; i++)
                 {
                     //input = input.Remove(0, 1);
                     curPos--;
-                    Console.SetCursorPosition(curPos, Console.CursorTop);
-                    Console.WriteLine(input);
+                    MyConsole.SetCursorPosition(curPos, MyConsole.CursorTop);
+                    MyConsole.WriteLine(input);
                 }
                 color++;
-                Console.ForegroundColor = (ConsoleColor)color;
+                //MyConsole.ForegroundColor = (MyConsoleColor)color;
             }
             char[] characters = input.ToCharArray();
             int maxPos = (int)Math.Round(3.75 * characters.Length - 1, MidpointRounding.ToZero);
@@ -81,7 +83,7 @@ namespace TextAnim
             {
                 pos[i] = i * 3;
             }
-
+            // Cha cha to the right
             for (int i = 0; i < 7.5 * characters.Length; i++)
             {
                 //input = input.Insert(input.Length - 1, " ");
@@ -115,18 +117,19 @@ namespace TextAnim
 
                     spaces = spaces + characters.Length - a - 1 >= maxPos ? maxPos - (characters.Length - a) : spaces;
 
-                    //Console.SetCursorPosition(pos[characters.Length - a - 1], Console.CursorTop);
-                    //Console.Write(characters[characters.Length - a - 1].ToString());
-                    Console.SetCursorPosition(spaces, Console.CursorTop);
-                    Console.Write(characters[a]);
+                    //MyConsole.SetCursorPosition(pos[characters.Length - a - 1], MyConsole.CursorTop);
+                    //MyConsole.Write(characters[characters.Length - a - 1].ToString());
+                    MyConsole.SetCursorPosition(spaces, MyConsole.CursorTop);
+                    MyConsole.Write(characters[a]);
                 }
-                Console.WriteLine();
-                //Console.WriteLine(send);
+                MyConsole.WriteLine();
+                //MyConsole.WriteLine(send);
             }
 
             color++;
-            Console.ForegroundColor = (ConsoleColor)color;
+            //MyConsole.ForegroundColor = (MyConsoleColor)color;
             //for (int i = 0; i < 30; i++)
+            // Cha cha to the left
             for (int i = (int)Math.Round(7.5 * characters.Length - 1, MidpointRounding.ToZero); i > -1; i--)
             {
                 //input = input.Insert(input.Length - 1, " ");
@@ -160,24 +163,26 @@ namespace TextAnim
 
                     spaces = spaces + characters.Length - a - 1 >= maxPos ? maxPos - (characters.Length - a) : spaces;
 
-                    //Console.SetCursorPosition(pos[characters.Length - a - 1], Console.CursorTop);
-                    //Console.Write(characters[characters.Length - a - 1].ToString());
-                    Console.SetCursorPosition(spaces, Console.CursorTop);
-                    Console.Write(characters[a]);
+                    //MyConsole.SetCursorPosition(pos[characters.Length - a - 1], MyConsole.CursorTop);
+                    //MyConsole.Write(characters[characters.Length - a - 1].ToString());
+                    MyConsole.SetCursorPosition(spaces, MyConsole.CursorTop);
+                    MyConsole.Write(characters[a]);
                 }
-                Console.WriteLine();
-                //Console.WriteLine(send);
+                MyConsole.WriteLine();
+                //MyConsole.WriteLine(send);
             }
             color++;
-            Console.ForegroundColor = (ConsoleColor)color;
+            //MyConsole.ForegroundColor = (MyConsoleColor)color;
+            // Move to the right
             curPos = 0;
             for (int i = 0; i < 15; i++)
             {
                 //input = " " + input;
                 curPos++;
-                Console.SetCursorPosition(curPos, Console.CursorTop);
-                Console.WriteLine(input);
+                MyConsole.SetCursorPosition(curPos, MyConsole.CursorTop);
+                MyConsole.WriteLine(input);
             }
+            // Wiggle in the middle
             string[] splitted = SplitTheString(input, 3);
             int[] positions = new int[3];
             for (int i = 0; i < positions.Length; i++)
@@ -205,10 +210,10 @@ namespace TextAnim
                     {
                         positions[a]++;
                     }
-                    Console.SetCursorPosition(positions[a], Console.CursorTop);
-                    Console.Write(splitted[a]);
+                    MyConsole.SetCursorPosition(positions[a], MyConsole.CursorTop);
+                    MyConsole.Write(splitted[a]);
                 }
-                Console.WriteLine();
+                MyConsole.WriteLine();
             }
             bool movingLeft = false;
             int original = positions[1];
@@ -225,10 +230,10 @@ namespace TextAnim
                 positions[1] += movingLeft ? -1 : 1;
                 for (int a = 0; a < splitted.Length; a++)
                 {
-                    Console.SetCursorPosition(positions[a], Console.CursorTop);
-                    Console.Write(splitted[a]);
+                    MyConsole.SetCursorPosition(positions[a], MyConsole.CursorTop);
+                    MyConsole.Write(splitted[a]);
                 }
-                Console.WriteLine();
+                MyConsole.WriteLine();
             }
             for (int i = 0; i < 10; i++)
             {
@@ -253,37 +258,42 @@ namespace TextAnim
                             positions[a]++;
                         }
                     }
-                    Console.SetCursorPosition(positions[a], Console.CursorTop);
-                    Console.Write(splitted[a]);
+                    MyConsole.SetCursorPosition(positions[a], MyConsole.CursorTop);
+                    MyConsole.Write(splitted[a]);
                 }
-                Console.WriteLine();
+                MyConsole.WriteLine();
             }
-            Console.SetCursorPosition(curPos, Console.CursorTop);
-            Console.WriteLine(input);
+            // Move to the left
+            MyConsole.SetCursorPosition(curPos, MyConsole.CursorTop);
+            MyConsole.WriteLine(input);
             for (int i = 0; i < 15; i++)
             {
                 //input = " " + input;
                 curPos--;
-                Console.SetCursorPosition(curPos, Console.CursorTop);
-                Console.WriteLine(input);
+                MyConsole.SetCursorPosition(curPos, MyConsole.CursorTop);
+                MyConsole.WriteLine(input);
             }
+
+            // Offsets!
             string offsetted = input;
             int timesToRun = GetNearestMultiple(20, input.Length);
             int offset = 1 * (rng.Next(0, 2) == 0 ? 1 : -1);
             for (int i = 0; i < timesToRun; i++)
             {
                 offsetted = Offset(offsetted, offset);
-                Console.WriteLine(offsetted);
+                MyConsole.WriteLine(offsetted);
             }
             color++;
-            Console.ForegroundColor = (ConsoleColor)color;
+            // Move to the right
+            //MyConsole.ForegroundColor = (MyConsoleColor)color;
             for (int i = 0; i < 15; i++)
             {
                 //input = " " + input;
                 curPos++;
-                Console.SetCursorPosition(curPos, Console.CursorTop);
-                Console.WriteLine(input);
+                MyConsole.SetCursorPosition(curPos, MyConsole.CursorTop);
+                MyConsole.WriteLine(input);
             }
+            // Twist around
             splitted = SplitTheString(input, 2);
             positions = new int[2];
             for (int i = 0; i < positions.Length; i++)
@@ -325,10 +335,10 @@ namespace TextAnim
                     {
                         positions[a] += movingLeft ? 1 : -1;
                     }
-                    Console.SetCursorPosition(positions[a], Console.CursorTop);
-                    Console.Write(splitted[a]);
+                    MyConsole.SetCursorPosition(positions[a], MyConsole.CursorTop);
+                    MyConsole.Write(splitted[a]);
                 }
-                Console.WriteLine();
+                MyConsole.WriteLine();
             }
             for (int i = 0; i < 30; i++)
             {
@@ -338,25 +348,27 @@ namespace TextAnim
                     {
                         positions[a] += positions[a] < originalPos[a] ? 1 : -1;
                     }
-                    Console.SetCursorPosition(positions[a], Console.CursorTop);
-                    Console.Write(splitted[a]);
+                    MyConsole.SetCursorPosition(positions[a], MyConsole.CursorTop);
+                    MyConsole.Write(splitted[a]);
                 }
-                Console.WriteLine();
+                MyConsole.WriteLine();
             }
             color++;
-            Console.ForegroundColor = (ConsoleColor)color;
+            //MyConsole.ForegroundColor = (MyConsoleColor)color;
+            // Move to the left
             for (int i = 0; i < 15; i++)
             {
                 //input = " " + input;
                 curPos--;
-                Console.SetCursorPosition(curPos, Console.CursorTop);
-                Console.WriteLine(input);
+                MyConsole.SetCursorPosition(curPos, MyConsole.CursorTop);
+                MyConsole.WriteLine(input);
             }
             for (int i = 0; i < 15; i++)
             {
-                Console.WriteLine();
+                MyConsole.WriteLine(input);
             }
             string temp = writer.ToString();
+            Console.WriteLine(MyConsole.GetString());
             Console.ReadKey(true);
         }
 
@@ -450,6 +462,14 @@ namespace TextAnim
                 UpdateCursor();
             }
 
+            public static void WriteLine()
+            {
+                UpdateCursor();
+                position[1]++;
+                position[0] = 0;
+                UpdateCursor();
+            }
+
             private static void UpdateCursor()
             {
                 if (everyThing.Count < 1)
@@ -473,21 +493,44 @@ namespace TextAnim
 
             public static void Write(string str)
             {
+                UpdateCursor();
                 if (everyThing.Count < 1)
                 {
                     everyThing.Add(new string(""));
                 }
+                if (everyThing[position[1]].Length < str.Length + position[0])
+                {
+                    everyThing[position[1]] = everyThing[position[1]].PadRight(position[0] + str.Length);
+                }
                 foreach (char c in str)
                 {
-                    ReplaceAt(everyThing[position[1]], position[0], c);
+                    everyThing[position[1]] = ReplaceAt(everyThing[position[1]], position[0], c);
                     position[0]++;
                 }
+                UpdateCursor();
+            }
+
+            public static void Write(char c)
+            {
+                UpdateCursor();
+                if (everyThing.Count < 1)
+                {
+                    everyThing.Add(new string(""));
+                }
+                if (everyThing[position[1]].Length < 1 + position[0])
+                {
+                    everyThing[position[1]] = everyThing[position[1]].PadRight(position[0] + 1);
+                }
+                everyThing[position[1]] = ReplaceAt(everyThing[position[1]], position[0], c);
+                position[0]++;
+                UpdateCursor();
             }
 
             public static void SetCursorPosition(int x, int y)
             {
                 position[0] = x;
                 position[1] = y;
+                UpdateCursor();
             }
 
             private static string ReplaceAt(string input, int index, char newChar)
@@ -499,6 +542,32 @@ namespace TextAnim
                 char[] chars = input.ToCharArray();
                 chars[index] = newChar;
                 return new string(chars);
+            }
+
+            public static int CursorTop
+            {
+                get
+                {
+                    return position[1];
+                }
+            }
+
+            public static int CursorLeft
+            {
+                get
+                {
+                    return position[0];
+                }
+            }
+
+            public static string GetString()
+            {
+                string SendString = string.Empty;
+                for (int i = 0; i < everyThing.Count; i++)
+                {
+                    SendString += everyThing[i] + "\n";
+                }
+                return SendString;
             }
         }
     }
